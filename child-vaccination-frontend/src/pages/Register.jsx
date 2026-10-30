@@ -10,7 +10,10 @@ function Register() {
         email: "",
         mobileNumber: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        childName: "",
+        childDateOfBirth: "",
+        childGender: ""
     });
 
     const [error, setError] = useState("");
@@ -39,7 +42,7 @@ function Register() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/api/users/register",
+                "http://localhost:8080/api/registration/parent-child",
                 {
                     method: "POST",
                     headers: {
@@ -49,7 +52,10 @@ function Register() {
                         fullName: formData.fullName,
                         email: formData.email,
                         mobileNumber: formData.mobileNumber,
-                        password: formData.password
+                        password: formData.password,
+                        childName: formData.childName,
+                        childDateOfBirth: formData.childDateOfBirth,
+                        childGender: formData.childGender
                     })
                 }
             );
@@ -60,11 +66,9 @@ function Register() {
                 throw new Error(data.message || "Registration failed.");
             }
 
-            setMessage("Registration successful!");
+            setMessage("Parent and child registered successfully!");
 
-            setTimeout(() => {
-                navigate("/login");
-            }, 1000);
+            setTimeout(() => navigate("/login"), 1000);
 
         } catch (error) {
             setError(error.message);
@@ -75,82 +79,106 @@ function Register() {
 
     return (
         <div>
-            <h2>Parent Registration</h2>
+            <div className="register-heading">
+            <h2>Parent and Child Registration</h2>
+            <p>Create your account and register your child.</p>
+       </div>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Full Name:</label>
-                    <input
-                        type="text"
-                        name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+            <form onSubmit={handleSubmit} className="register-form">
 
-                <br />
+                <h3>Parent Details</h3>
 
-                <div>
-                    <label>Email Address:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                <label>Parent Name</label>
+                <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    required
+                />
 
-                <br />
+                <label>Email Address</label>
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                />
 
-                <div>
-                    <label>Mobile Number:</label>
-                    <input
-                        type="tel"
-                        name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                <label>Mobile Number</label>
+                <input
+                    type="tel"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleChange}
+                    required
+                />
 
-                <br />
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    minLength="8"
+                    required
+                />
 
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        minLength="8"
-                        required
-                    />
-                </div>
+                <label>Confirm Password</label>
+                <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    minLength="8"
+                    required
+                />
 
-                <br />
+                <hr />
 
-                <div>
-                    <label>Confirm Password:</label>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        minLength="8"
-                        required
-                    />
-                </div>
+                <h3>Child Details</h3>
 
-                <br />
+                <label>Child Name</label>
+                <input
+                    type="text"
+                    name="childName"
+                    value={formData.childName}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label>Date of Birth</label>
+                <input
+                    type="date"
+                    name="childDateOfBirth"
+                    value={formData.childDateOfBirth}
+                    onChange={handleChange}
+                    max={new Date().toISOString().split("T")[0]}
+                    required
+                />
+
+                <label>Gender</label>
+                <select
+                    name="childGender"
+                    value={formData.childGender}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
 
                 {error && <p style={{ color: "red" }}>{error}</p>}
+
                 {message && <p style={{ color: "green" }}>{message}</p>}
 
                 <button type="submit" disabled={loading}>
                     {loading ? "Registering..." : "Register"}
                 </button>
+
             </form>
 
             <p>
