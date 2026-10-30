@@ -4,6 +4,7 @@ package com.childvaccination.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.childvaccination.entity.Child;
@@ -54,4 +55,25 @@ public class ChildController {
     public void deleteChild(@PathVariable Long id) {
         childService.deleteChild(id);
     }
+    
+
+@PutMapping("/{id}")
+public ResponseEntity<Child> updateChild(
+        @PathVariable Long id,
+        @Valid @RequestBody Child updatedChild) {
+
+    Child existingChild = childService.getChildById(id);
+
+    existingChild.setName(updatedChild.getName());
+    existingChild.setDateOfBirth(updatedChild.getDateOfBirth());
+    existingChild.setGender(updatedChild.getGender());
+    existingChild.setParentName(updatedChild.getParentName());
+    existingChild.setParentPhone(updatedChild.getParentPhone());
+    existingChild.setParentEmail(updatedChild.getParentEmail());
+
+    Child savedChild = childService.saveChild(existingChild);
+
+    return ResponseEntity.ok(savedChild);
+}
+
 }
